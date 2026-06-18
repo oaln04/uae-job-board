@@ -1,4 +1,3 @@
-```md
 # UAE Job Board
 
 A simple React-based job board application built as the first step toward a full UAE-focused job aggregation platform. This project displays job listings, includes search functionality, and is structured for future expansion into a full-stack system with backend, database, and web scraping.
@@ -48,7 +47,6 @@ This current version is the frontend foundation.
 ---
 
 ## 📁 Project Structure
-```
 
 src/
 ├── components/
@@ -60,8 +58,6 @@ src/
 │
 ├── App.jsx
 ├── main.jsx
-
-````
 
 ---
 
@@ -75,35 +71,6 @@ src/
 - Saved jobs
 - Application tracking system
 - Email job alerts
-
----
-
-## 🛠️ Getting Started (Local Setup)
-
-### 1. Clone the repo
-```bash
-git clone https://github.com/YOUR_USERNAME/uae-job-board.git
-````
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Run the development server
-
-```bash
-npm run dev
-```
-
----
-
-## 📦 Build for Production
-
-```bash
-npm run build
-```
 
 ---
 
@@ -124,7 +91,3 @@ Built by a senior Computer Engineering student studying in the UAE who is consta
 ## 📌 Notes
 
 This project is actively in development. Backend and scraping systems will be added incrementally as part of a structured learning roadmap.
-
-```
-
-```
