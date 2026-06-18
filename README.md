@@ -1,16 +1,130 @@
-# React + Vite
+```md
+# UAE Job Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React-based job board application built as the first step toward a full UAE-focused job aggregation platform. This project displays job listings, includes search functionality, and is structured for future expansion into a full-stack system with backend, database, and web scraping.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Live Demo
 
-## React Compiler
+https://joboardae.oaln04.xyz/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📌 About the Project
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project is part of a larger goal: building a real-world job aggregation platform for software engineering roles in the UAE.
+
+The long-term vision includes:
+
+- Aggregating jobs from multiple platforms (LinkedIn, Bayt, Indeed, company career pages)
+- Removing duplicate listings
+- Providing a clean, searchable interface
+- Adding saved jobs and application tracking
+
+This current version is the frontend foundation.
+
+---
+
+## ⚙️ Tech Stack
+
+- React (Vite)
+- JavaScript (ES6+)
+- CSS
+- HTML
+- Git & GitHub
+- Vercel (deployment)
+
+---
+
+## 🧠 Features (Current Version)
+
+- Job listing UI
+- Job cards with title, company, location, and type
+- Search bar for filtering jobs
+- Component-based architecture
+- Responsive layout (basic)
+
+---
+
+## 📁 Project Structure
+```
+
+src/
+├── components/
+│ ├── JobCard.jsx
+│ ├── SearchBar.jsx
+│
+├── pages/
+│ ├── HomePage.jsx
+│
+├── App.jsx
+├── main.jsx
+
+````
+
+---
+
+## 🔮 Planned Features
+
+- Backend API (FastAPI)
+- PostgreSQL database integration
+- Real job scraping (LinkedIn, Bayt, Indeed)
+- Duplicate job detection
+- User accounts
+- Saved jobs
+- Application tracking system
+- Email job alerts
+
+---
+
+## 🛠️ Getting Started (Local Setup)
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/YOUR_USERNAME/uae-job-board.git
+````
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Run the development server
+
+```bash
+npm run dev
+```
+
+---
+
+## 📦 Build for Production
+
+```bash
+npm run build
+```
+
+---
+
+## 🎯 Goal of This Project
+
+This project is not just a frontend app — it is the foundation of a real job-seeking tool and a full-stack engineering portfolio piece.
+
+The end goal is to turn this into a production-ready job aggregation platform that helps developers find opportunities in the UAE efficiently.
+
+---
+
+## 👨‍💻 Author
+
+Built by a senior Computer Engineering student studying in the UAE who is constantly thinking about jobs in the current job market.
+
+---
+
+## 📌 Notes
+
+This project is actively in development. Backend and scraping systems will be added incrementally as part of a structured learning roadmap.
+
+```
+
+```
