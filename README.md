@@ -46,21 +46,6 @@ This current version is the frontend foundation.
 
 ---
 
-## 📁 Project Structure
-
-src/
-├── components/
-│ ├── JobCard.jsx
-│ ├── SearchBar.jsx
-│
-├── pages/
-│ ├── HomePage.jsx
-│
-├── App.jsx
-├── main.jsx
-
----
-
 ## 🔮 Planned Features
 
 - Backend API (FastAPI)
