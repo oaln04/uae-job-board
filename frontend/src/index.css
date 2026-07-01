@@ -94,6 +94,7 @@ h1 {
 }
 
 .search-panel,
+.matcher-panel,
 .job-card,
 .notice {
   border: 1px solid var(--border);
@@ -108,6 +109,13 @@ h1 {
   padding: 20px;
 }
 
+.matcher-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 20px;
+}
+
 label {
   display: grid;
   gap: 7px;
@@ -117,7 +125,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   min-height: 44px;
   border: 1px solid var(--border);
@@ -129,15 +138,22 @@ select {
 
 input:focus,
 select:focus,
+textarea:focus,
 button:focus-visible,
 a:focus-visible {
   outline: 3px solid rgba(4, 124, 137, 0.22);
   outline-offset: 2px;
 }
 
+textarea {
+  min-height: 132px;
+  padding: 12px;
+  resize: vertical;
+}
+
 .filters-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   gap: 14px;
   align-items: end;
 }
@@ -160,6 +176,31 @@ button:disabled {
   border-color: var(--border);
   color: #8a98a3;
   background: var(--surface-muted);
+}
+
+.secondary-button {
+  border-color: var(--border);
+  color: var(--text-strong);
+  background: #fff;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: var(--surface-muted);
+}
+
+.matcher-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.matcher-message {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.matcher-message.error {
+  color: var(--danger);
 }
 
 .results-header {
@@ -200,6 +241,11 @@ button:disabled {
   letter-spacing: 0;
 }
 
+.job-description {
+  margin-top: 8px;
+  color: #5d6b76;
+}
+
 .job-meta {
   display: flex;
   flex-wrap: wrap;
@@ -214,6 +260,38 @@ button:disabled {
   color: var(--text-strong);
   background: var(--surface-muted);
   font-size: 0.9rem;
+}
+
+.match-card {
+  grid-column: 1 / -1;
+  border: 1px solid rgba(4, 124, 137, 0.24);
+  border-radius: 8px;
+  padding: 14px;
+  background: #f0f8fa;
+  color: var(--text-strong);
+}
+
+.match-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--accent-dark);
+}
+
+.match-card ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.match-card li {
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #fff;
+  color: var(--text);
+  font-size: 0.88rem;
 }
 
 .job-footer {

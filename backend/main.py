@@ -1,7 +1,16 @@
 from typing import Annotated
 
-from fastapi import FastAPI, Query
+from fastapi import APIRouter, FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from backend.job_engine import (
+    build_filter_options,
+    filter_jobs,
+    get_all_jobs,
+    match_jobs_to_cv,
+    refresh_jobs,
+)
 
 app = FastAPI(title="UAE Job Board API")
 
@@ -9,128 +18,37 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
-JOBS = [
-    {
-        "id": 1,
-        "title": "Software Engineer",
-        "company": "Careem",
-        "location": "Dubai",
-        "type": "Full-time",
-        "specialty": "Software Engineering",
-        "source": "Company careers",
-        "url": "https://www.careem.com/careers/",
-    },
-    {
-        "id": 2,
-        "title": "Frontend Developer",
-        "company": "Noon",
-        "location": "Dubai",
-        "type": "Full-time",
-        "specialty": "Frontend",
-        "source": "Company careers",
-        "url": "https://www.noon.com/uae-en/careers/",
-    },
-    {
-        "id": 3,
-        "title": "Backend Engineer",
-        "company": "Talabat",
-        "location": "Abu Dhabi",
-        "type": "Full-time",
-        "specialty": "Backend",
-        "source": "Company careers",
-        "url": "https://www.talabat.com/uae/careers",
-    },
-    {
-        "id": 4,
-        "title": "Machine Learning Engineer",
-        "company": "G42",
-        "location": "Abu Dhabi",
-        "type": "Full-time",
-        "specialty": "AI/ML",
-        "source": "Company careers",
-        "url": "https://www.g42.ai/careers",
-    },
-    {
-        "id": 5,
-        "title": "Data Engineer",
-        "company": "Bayut",
-        "location": "Dubai",
-        "type": "Full-time",
-        "specialty": "Data Engineering",
-        "source": "Company careers",
-        "url": "https://www.bayut.com/careers/",
-    },
-    {
-        "id": 6,
-        "title": "AI Research Intern",
-        "company": "Technology Innovation Institute",
-        "location": "Abu Dhabi",
-        "type": "Internship",
-        "specialty": "AI/ML",
-        "source": "Company careers",
-        "url": "https://www.tii.ae/careers",
-    },
-    {
-        "id": 7,
-        "title": "Cloud Software Engineer",
-        "company": "Microsoft",
-        "location": "Dubai",
-        "type": "Full-time",
-        "specialty": "Cloud",
-        "source": "Company careers",
-        "url": "https://careers.microsoft.com/",
-    },
-    {
-        "id": 8,
-        "title": "Computer Vision Engineer",
-        "company": "Presight",
-        "location": "Abu Dhabi",
-        "type": "Full-time",
-        "specialty": "AI/ML",
-        "source": "Company careers",
-        "url": "https://presight.ai/careers/",
-    },
-    {
-        "id": 9,
-        "title": "DevOps Engineer",
-        "company": "Kitopi",
-        "location": "Dubai",
-        "type": "Full-time",
-        "specialty": "DevOps",
-        "source": "Company careers",
-        "url": "https://www.kitopi.com/careers",
-    },
-    {
-        "id": 10,
-        "title": "Software Engineering Intern",
-        "company": "Amazon",
-        "location": "Dubai",
-        "type": "Internship",
-        "specialty": "Software Engineering",
-        "source": "Company careers",
-        "url": "https://www.amazon.jobs/",
-    },
-]
+router = APIRouter()
+
+class RefreshRequest(BaseModel):
+    limit_per_source: int = Field(default=12, ge=1, le=30)
 
 
-def build_filter_options(jobs):
+class MatchRequest(BaseModel):
+    cv_text: str = Field(min_length=20)
+    limit: int = Field(default=6, ge=1, le=20)
+    q: str = ""
+    location: str = ""
+    type: str = ""
+    specialty: str = ""
+    source: str = ""
+
+
+@router.get("/")
+def root():
     return {
-        "locations": sorted({job["location"] for job in jobs}),
-        "types": sorted({job["type"] for job in jobs}),
-        "specialties": sorted({job["specialty"] for job in jobs}),
+        "message": "UAE Job Board API",
+        "jobs_endpoint": "/jobs",
+        "refresh_endpoint": "/jobs/refresh",
+        "match_endpoint": "/match",
     }
 
 
-@app.get("/")
-def root():
-    return {"message": "UAE Job Board API", "jobs_endpoint": "/jobs"}
-
-
-@app.get("/jobs")
+@router.get("/jobs")
 def list_jobs(
     q: Annotated[
         str,
@@ -139,34 +57,43 @@ def list_jobs(
     location: str = "",
     job_type: Annotated[str, Query(alias="type")] = "",
     specialty: str = "",
+    source: str = "",
 ):
-    query = q.strip().lower()
-    selected_location = location.strip().lower()
-    selected_type = job_type.strip().lower()
-    selected_specialty = specialty.strip().lower()
-
-    def matches(job):
-        searchable_text = " ".join(
-            [
-                job["title"],
-                job["company"],
-                job["location"],
-                job["type"],
-                job["specialty"],
-            ]
-        ).lower()
-
-        return (
-            (not query or query in searchable_text)
-            and (not selected_location or job["location"].lower() == selected_location)
-            and (not selected_type or job["type"].lower() == selected_type)
-            and (not selected_specialty or job["specialty"].lower() == selected_specialty)
-        )
-
-    filtered_jobs = [job for job in JOBS if matches(job)]
+    all_jobs = get_all_jobs()
+    filtered_jobs = filter_jobs(all_jobs, q, location, job_type, specialty, source)
 
     return {
         "jobs": filtered_jobs,
         "total": len(filtered_jobs),
-        "filters": build_filter_options(JOBS),
+        "filters": build_filter_options(all_jobs),
     }
+
+
+@router.post("/jobs/refresh")
+def refresh_job_sources(payload: RefreshRequest):
+    return refresh_jobs(limit_per_source=payload.limit_per_source)
+
+
+@router.post("/match")
+def match_cv_to_jobs(payload: MatchRequest):
+    all_jobs = get_all_jobs()
+    filtered_jobs = filter_jobs(
+        all_jobs,
+        query=payload.q,
+        location=payload.location,
+        job_type=payload.type,
+        specialty=payload.specialty,
+        source=payload.source,
+    )
+
+    matches = match_jobs_to_cv(payload.cv_text, filtered_jobs, limit=payload.limit)
+
+    return {
+        "matches": matches,
+        "total": len(matches),
+        "filters": build_filter_options(all_jobs),
+    }
+
+
+app.include_router(router)
+app.include_router(router, prefix="/api")

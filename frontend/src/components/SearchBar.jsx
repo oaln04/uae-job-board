@@ -7,6 +7,8 @@ function SearchBar({
     onTypeChange,
     selectedSpecialty,
     onSpecialtyChange,
+    selectedSource,
+    onSourceChange,
     filters,
     onClear,
     hasActiveFilters,
@@ -50,6 +52,16 @@ function SearchBar({
                         <option value="">All specialties</option>
                         {filters.specialties.map(specialty => (
                             <option key={specialty} value={specialty}>{specialty}</option>
+                        ))}
+                    </select>
+                </label>
+
+                <label>
+                    <span>Source</span>
+                    <select value={selectedSource} onChange={e => onSourceChange(e.target.value)}>
+                        <option value="">All sources</option>
+                        {filters.sources.map(source => (
+                            <option key={source} value={source}>{source}</option>
                         ))}
                     </select>
                 </label>
